@@ -3,6 +3,8 @@
 const restify = require('restify');
 const builder = require('botbuilder');
 const promocoes = require('./promocoes');
+const promocoes = require('./helper');
+const got = require('got')
 
 //=========================================================
 // Bot Setup
@@ -46,116 +48,58 @@ bot.dialog('/promocao_tres', promocoes.promocao_tres);
 intents.matches('WELCOME', (s) => {
     s.send('Oi Ana, tudo bom? Vi que você tem 39 pontos e faltam apenas 11 para você completar o seu pedido! Posso te mostrar promoções, lançamentos e presentes? Escolha uma opção.')
 
-    var reply = new builder.Message(s)
-        .attachmentLayout(builder.AttachmentLayout.carousel)
-        .attachments([{
-            "contentType": "application/vnd.microsoft.card.hero",
-            "content": {
-                "title": "Promoções",
-                "subtitle": "Promoções",
-                "images": [
-                    { "url": "https://dummyimage.com/600x300" }
-                ],
-                "buttons": [{
-                    "type": "postBack",
-                    "title": "Ver promoções",
-                    "value": "PROMOCAO"
-                }]
-            }
+    helper.sendSlider([
+        {
+            "title": "Promoções",
+            "subtitle": "Promoções",
+            "images": [
+                { "url": "https://dummyimage.com/600x300" }
+            ],
+            "buttons": [{
+                "type": "postBack",
+                "title": "Ver promoções",
+                "value": "PROMOCAO"
+            }]
         }, {
-            "contentType": "application/vnd.microsoft.card.hero",
-            "content": {
-                "title": "Presentes",
-                "subtitle": "Presentes",
-                "images": [
-                    { "url": "https://dummyimage.com/600x300" }
-                ],
-                "buttons": [{
-                    "type": "postBack",
-                    "title": "Ver presentes",
-                    "value": "PRESENTE"
-                }]
-            }
-        }, {
-            "contentType": "application/vnd.microsoft.card.hero",
-            "content": {
-                "title": "Lançamento",
-                "subtitle": "Lançamento",
-                "images": [
-                    { "url": "https://dummyimage.com/600x300" }
-                ],
-                "buttons": [{
-                    "type": "postBack",
-                    "title": "Ver lançamento",
-                    "value": "LANCAMENTO"
-                }]
-            }
+            "title": "Presentes",
+            "subtitle": "Presentes",
+            "images": [
+                { "url": "https://dummyimage.com/600x300" }
+            ],
+            "buttons": [{
+                "type": "postBack",
+                "title": "Ver presentes",
+                "value": "PRESENTE"
+            }]
+        }
+    }, {
+            "title": "Lançamento",
+            "subtitle": "Lançamento",
+            "images": [
+                { "url": "https://dummyimage.com/600x300" }
+            ],
+            "buttons": [{
+                "type": "postBack",
+                "title": "Ver lançamento",
+                "value": "LANCAMENTO"
+            }]
         }
     ]);
-
-    s.send(reply);
 });
 
 intents.matches('PEDIDOS_MODELO', (s) => s.send('PEDIDOS_MODELOS'));
 
 intents.matches('PAGAMENTO', (s) => s.send('PAGAMENTOS'));
 intents.matches('LANCAMENTO', (s) => s.send('LANCAMENTOS'));
-intents.matches('PRESENTE', (s) => s.send('presentes!'));
+intents.matches('PRESENTE', (s) => {
+    got.post("https://search.oppuz.com/natura/api/search/v2", {
+        "text": "presente",
+        "pageSize": 1,
+        "token": "27c7ea9af3f1d3657bc810d2"
+    })
+    s.send('presentes!')
+});
 intents.matches('BYE', '/bye');
-
-// intents.matches('WELCOME', function (session) {
-//     session.send('Oi Maria, em que posso te ajudar?');
-
-//     // create reply with Carousel AttachmentLayout
-//     var reply = new builder.Message(session)
-//         .attachmentLayout(builder.AttachmentLayout.carousel)
-//         .attachments([{
-//             "contentType": "application/vnd.microsoft.card.hero",
-//             "content": {
-//                 "title": "Promoções",
-//                 "subtitle": "Promoções",
-//                 "images": [
-//                     { "url": "https://dummyimage.com/600x300" }
-//                 ],
-//                 "buttons": [{
-//                     "type": "postBack",
-//                     "title": "Ver promoções",
-//                     "value": "PROMOCAO"
-//                 }]
-//             }
-//         }, {
-//             "contentType": "application/vnd.microsoft.card.hero",
-//             "content": {
-//                 "title": "Presentes",
-//                 "subtitle": "Presentes",
-//                 "images": [
-//                     { "url": "https://dummyimage.com/600x300" }
-//                 ],
-//                 "buttons": [{
-//                     "type": "postBack",
-//                     "title": "Ver presentes",
-//                     "value": "PRESENTE"
-//                 }]
-//             }
-//         }, {
-//             "contentType": "application/vnd.microsoft.card.hero",
-//             "content": {
-//                 "title": "Lançamento",
-//                 "subtitle": "Lançamento",
-//                 "images": [
-//                     { "url": "https://dummyimage.com/600x300" }
-//                 ],
-//                 "buttons": [{
-//                     "type": "postBack",
-//                     "title": "Ver lançamento",
-//                     "value": "LANCAMENTO"
-//                 }]
-//             }
-//         }
-//     ]);
-
-//     session.send(reply);
-// });
 
 intents.onDefault((session, args) => {
     console.log(args);
