@@ -2,6 +2,7 @@
 
 const restify = require('restify');
 const builder = require('botbuilder');
+const got = require('got')
 
 //=========================================================
 // Bot Setup
@@ -41,6 +42,9 @@ bot.dialog('/', intents);
 intents.matches('WELCOME', function (session) {
     session.send('Hello!');
 
+
+
+
     // create reply with Carousel AttachmentLayout
     var reply = new builder.Message(session)
         .attachmentLayout(builder.AttachmentLayout.carousel)
@@ -66,12 +70,17 @@ intents.matches('WELCOME', function (session) {
 });
 
 intents.matches('PEDIDOS_MODELO');
-intents.matches('PROMOCAO', (s) => {
-
-});
+intents.matches('PROMOCAO', (s) => {});
 intents.matches('PAGAMENTO');
 intents.matches('LANCAMENTO');
-intents.matches('PRESENTE');
+intents.matches('PRESENTE', (s) => {
+    // get first promotion
+    got.post("https://search.oppuz.com/natura/api/search/v2", {
+        "text": "presente",
+        "pageSize": 1,
+        "token": "27c7ea9af3f1d3657bc810d2"
+    })
+});
 
 intents.matches('BYE', function (session) {
     session.send('Bye!');
