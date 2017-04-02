@@ -83,7 +83,7 @@ module.exports = {
 			}
 
 			arrayToSend.push({
-				title: `${thisPresente.name} (${prontos} pontos)`,
+				title: `${thisPresente.name}`,
 				subtitle: subtitle,
 				images: [{
 					url: thisPresente.img
@@ -131,7 +131,7 @@ module.exports = {
 			subtitle = `De: R$ ${thisPresente.list_price.toFixed(2)} Por: R$ ${precoPromocao}`;
 
 			arrayToSend.push({
-				title: `${thisPresente.name} (${prontos} pontos)`,
+				title: `${thisPresente.name}`,
 				subtitle: subtitle,
 				images: [{
 					url: thisPresente.img
