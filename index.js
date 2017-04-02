@@ -2,9 +2,12 @@
 
 const restify = require('restify');
 const builder = require('botbuilder');
-const promocoes = require('./promocoes');
-const promocoes = require('./helper');
-const got = require('got')
+const helper = require('./helper');
+const got = require('got');
+
+const cenarioUm = require('./cenario_um');
+const cenarioTres = require('./cenario_tres');
+const cenarioQuatro = require('./cenario_quatro');
 
 //=========================================================
 // Bot Setup
@@ -34,74 +37,28 @@ server.post('/api/messages', connector.listen());
 //=========================================================
 
 bot.dialog('/', intents);
-bot.dialog('/bye', (s) => {
-    s.send('Byes!');
-    s.endDialog();
-});
 
-intents.matches('PROMOCAO', '/promocao');
-bot.dialog('/promocao', promocoes.promocao);
-bot.dialog('/promocao_um', promocoes.promocao_um);
-bot.dialog('/promocao_dois', promocoes.promocao_dois);
-bot.dialog('/promocao_tres', promocoes.promocao_tres);
+intents.matches('00000000000000000000', cenarioUm.init);
+intents.matches('11111111111111111111', cenarioUm.promocao);
+intents.matches('22222222222222222222', cenarioUm.promocao_um);
+intents.matches('33333333333333333333', cenarioUm.promocao_dois);
+intents.matches('44444444444444444444', cenarioUm.promocao_tres);
 
-intents.matches('WELCOME', (s) => {
-    s.send('Oi Ana, tudo bom? Vi que você tem 39 pontos e faltam apenas 11 para você completar o seu pedido! Posso te mostrar promoções, lançamentos e presentes? Escolha uma opção.')
+intents.matches('55555555555555555555', cenarioTres.init);
+intents.matches('66666666666666666666', cenarioTres.presente);
+intents.matches('77777777777777777777', cenarioTres.presente_dois);
+intents.matches('88888888888888888888', cenarioTres.presente_tres);
+intents.matches('99999999999999999999', cenarioTres.presente_quatro);
 
-    helper.sendSlider([
-        {
-            "title": "Promoções",
-            "subtitle": "Promoções",
-            "images": [
-                { "url": "https://dummyimage.com/600x300" }
-            ],
-            "buttons": [{
-                "type": "postBack",
-                "title": "Ver promoções",
-                "value": "PROMOCAO"
-            }]
-        }, {
-            "title": "Presentes",
-            "subtitle": "Presentes",
-            "images": [
-                { "url": "https://dummyimage.com/600x300" }
-            ],
-            "buttons": [{
-                "type": "postBack",
-                "title": "Ver presentes",
-                "value": "PRESENTE"
-            }]
-        }
-    }, {
-            "title": "Lançamento",
-            "subtitle": "Lançamento",
-            "images": [
-                { "url": "https://dummyimage.com/600x300" }
-            ],
-            "buttons": [{
-                "type": "postBack",
-                "title": "Ver lançamento",
-                "value": "LANCAMENTO"
-            }]
-        }
-    ]);
-});
-
-intents.matches('PEDIDOS_MODELO', (s) => s.send('PEDIDOS_MODELOS'));
-
-intents.matches('PAGAMENTO', (s) => s.send('PAGAMENTOS'));
-intents.matches('LANCAMENTO', (s) => s.send('LANCAMENTOS'));
-intents.matches('PRESENTE', (s) => {
-    got.post("https://search.oppuz.com/natura/api/search/v2", {
-        "text": "presente",
-        "pageSize": 1,
-        "token": "27c7ea9af3f1d3657bc810d2"
-    })
-    s.send('presentes!')
-});
-intents.matches('BYE', '/bye');
+intents.matches('WELCOME', cenarioQuatro.init);
+intents.matches('PROMOCAO', cenarioQuatro.promocao);
+intents.matches('LANCAMENTO', cenarioQuatro.lancamento);
+intents.matches('PRESENTE', cenarioQuatro.presente);
+intents.matches('MODELO', cenarioQuatro.modelo);
+intents.matches('MODELO_55555', cenarioQuatro.modelo_cinco);
+intents.matches('OBRIGADO', cenarioQuatro.obrigado);
+intents.matches('PEDIDO', cenarioQuatro.pedido);
 
 intents.onDefault((session, args) => {
-    console.log(args);
     session.send('Desculpe nao entendi');
 });

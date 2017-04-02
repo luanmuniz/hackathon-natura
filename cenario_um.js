@@ -3,7 +3,48 @@ const helper = require('./helper');
 
 module.exports = {
 
-	promocao: (s) => {
+	init(s) {
+		s.send('Oi Maria, tudo bom? Vi que você tem 39 pontos e faltam apenas 11 para você completar o seu pedido! Posso te mostrar promoções, lançamentos e presentes? Escolha uma opção.')
+
+	    helper.sendSlider(s, [
+	        {
+	            "title": "Promoções",
+	            "subtitle": "Promoções",
+	            "images": [
+	                { "url": "https://dummyimage.com/600x300" }
+	            ],
+	            "buttons": [{
+	                "type": "postBack",
+	                "title": "Ver presentes",
+	                "value": "11111111111111111111"
+	            }]
+	        }, {
+	            "title": "Presentes",
+	            "subtitle": "Presentes",
+	            "images": [
+	                { "url": "https://dummyimage.com/600x300" }
+	            ],
+	            "buttons": [{
+	                "type": "postBack",
+	                "title": "Ver presentes",
+	                "value": "55555555555555555555"
+	            }]
+	        }, {
+	            "title": "Lançamento",
+	            "subtitle": "Lançamento",
+	            "images": [
+	                { "url": "https://dummyimage.com/600x300" }
+	            ],
+	            "buttons": [{
+	                "type": "postBack",
+	                "title": "Ver lançamento",
+	                "value": ""
+	            }]
+	        }
+	    ]);
+	},
+
+	promocao(s) {
 		s.send('Legal! Você escolheu promoções! Aqui estão duas indicações que escolhemos especialmente para te ajudar a você passar o pedido de 50 pontos ou mais!');
 
 		helper.sendSlider(s, [{
@@ -15,7 +56,7 @@ module.exports = {
 			"buttons": [{
 				"type": "postBack",
 				"title": "Ver promoções",
-				"value": "/promocao_um"
+				"value": "22222222222222222222"
 			}]
 		}, {
 			"title": "Mais 15 pontos",
@@ -26,12 +67,12 @@ module.exports = {
 			"buttons": [{
 				"type": "postBack",
 				"title": "Ver promoções",
-				"value": "/promocao_um"
+				"value": "22222222222222222222"
 			}]
 		}]);
 	},
 
-	promocao_um: (s) => {
+	promocao_um(s) {
 		s.send('Ótima escolha! Quer ainda aumentar suas vendas e passar um pedido de 80 pontos ou mais? Posso te ajudar a montar um pedido especial para você e te mostrar promoções, lançamentos e presentes. Escolha uma opção.');
 
 		helper.sendSlider(s, [{
@@ -43,7 +84,7 @@ module.exports = {
 			"buttons": [{
 				"type": "postBack",
 				"title": "Ver promoções",
-				"value": "/promocao_dois"
+				"value": "33333333333333333333"
 			}]
 		}, {
 			"title": "Mais 50 pontos",
@@ -54,12 +95,12 @@ module.exports = {
 			"buttons": [{
 				"type": "postBack",
 				"title": "Ver promoções",
-				"value": "/promocao_dois"
+				"value": "33333333333333333333"
 			}]
 		}]);
 	},
 
-	promocao_dois: (s) => {
+	promocao_dois(s) {
 		s.send('Ótima escolha! Quer ainda aumentar suas vendas e passar um pedido de 80 pontos ou mais? Posso te ajudar a montar um pedido especial para você e te mostrar promoções, lançamentos e presentes. Escolha uma opção.');
 
 		helper.sendSlider(s, [{
@@ -71,7 +112,7 @@ module.exports = {
 			"buttons": [{
 				"type": "postBack",
 				"title": "Ver promoções",
-				"value": "/promocao_tres"
+				"value": "44444444444444444444"
 			}]
 		}, {
 			"title": "Mais 50 pontos",
@@ -82,7 +123,7 @@ module.exports = {
 			"buttons": [{
 				"type": "postBack",
 				"title": "Ver promoções",
-				"value": "/promocao_tres"
+				"value": "44444444444444444444"
 			}]
 		}]);
 	},
