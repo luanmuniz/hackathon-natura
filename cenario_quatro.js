@@ -51,8 +51,6 @@ module.exports = {
 
 		let stringToQuery = encodeURI(JSON.stringify(objToQuery)).replace(/\:/mg, '%3A').replace(/\,/mg, '%2C');
 
-		console.log(objToQuery, stringToQuery)
-
 		s.send(texto);
 		s.sendTyping();
 		let apiResult = await got(`http://40.71.226.49/rec/sortOffers?store=natura&field=price&q=${stringToQuery}`, {
@@ -67,6 +65,10 @@ module.exports = {
 			let prontos = Math.ceil(thisPresente.price / 4.2).toFixed(0);
 			subtitle = `De: R$ ${thisPresente.list_price.toFixed(2)} Por: R$ ${precoPromocao}`;
 
+			if (actualIntent === 'PRESENTE') {
+				subtitle = '';
+			}
+
 			arrayToSend.push({
 				title: `${thisPresente.name} (${prontos} pontos)`,
 				subtitle: subtitle,
@@ -74,9 +76,21 @@ module.exports = {
 					url: thisPresente.img
 				}],
 				buttons: [{
-					type: "postBack",
+					type: "openUrl",
 					title: "Adicionar ao pedido",
-					value: "INTENT_CATEGORIA_ADD"
+					value: "http://google.com"
+				},{
+					type: "openUrl",
+					title: "Adicionar ao pedido 2",
+					value: "https://pedidos2.natura.net/captaweb/captaweb/index.html#!view=pedido&code=22560"
+				},{
+					type: "openUrl",
+					title: "Adicionar ao pedido 3",
+					value: "#!view=pedido&code=22560"
+				},{
+					type: "openUrl",
+					title: "Adicionar ao pedido 4",
+					value: "/captaweb/captaweb/index.html#!view=pedido&code=22560"
 				}]
 			});
 		});
