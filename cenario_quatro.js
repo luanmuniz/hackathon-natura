@@ -104,6 +104,51 @@ module.exports = {
 		s.endDialog();
 	},
 
+	async vendido(s) {
+		s.send(`Sim, esse é nosso produto mais popular!`);
+		let objToQuery = {
+			metadata: {
+				substantive: 'Perfume Natura',
+				type : { or: ["Deo Colônia", "Deo Parfum"]}
+			}
+		};
+
+		s.sendTyping();
+		let stringToQuery = encodeURI(JSON.stringify(objToQuery)).replace(/\:/mg, '%3A').replace(/\,/mg, '%2C');
+		let apiResult = await got(`http://40.71.226.49/rec/sortOffers?store=natura&field=price&q=${stringToQuery}`, {
+			headers: {
+				'Authorization': 'adcfdecda123491231afddaee'
+			}
+		});
+
+		let arrayToSend = [];
+		let product = JSON.parse(apiResult.body);
+		let thisPresente = product[0];
+		let precoPromocao = (thisPresente.price * 0.7).toFixed(2);
+		let prontos = Math.ceil(thisPresente.price / 4.2).toFixed(0);
+		subtitle = `De: R$ ${thisPresente.list_price.toFixed(2)} Por: R$ ${precoPromocao}`;
+
+		if (actualIntent === 'PRESENTE') {
+			subtitle = '';
+		}
+
+		arrayToSend.push({
+			title: `${thisPresente.name} (${prontos} pontos)`,
+			subtitle: subtitle,
+			images: [{
+				url: thisPresente.img
+			}],
+			buttons: [{
+				type: "postBack",
+				title: `Adicionar #${thisPresente.id} ao pedido`,
+				value: "INTENT_CATEGORIA_ADD"
+			}]
+		});
+
+		helper.sendSlider(s, arrayToSend);
+		s.endDialog();
+	},
+
 	obrigado(s) {
 		s.send('Ótimo!! Sempre que quiser, estarei aqui para te ajudar! Boas vendas!');
 		actualIntent = '';

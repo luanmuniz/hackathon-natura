@@ -49,18 +49,11 @@ bot.dialog('/intents', intents);
 
 global.actualIntent = '';
 
-// intents.matches('WELCOME', cenarioUm.init);
-// intents.matches('00000000000000000000', cenarioUm.init);
-// bot.dialog('/promocao_um', cenarioUm.promocao);
-// bot.dialog('/promocao_dois', cenarioUm.promocao_um);
-// bot.dialog('/promocao_tres', cenarioUm.promocao_dois);
-// bot.dialog('/promocao_quatro', cenarioUm.promocao_tres);
-
-intents.matches('11111111111111111111', cenarioTres.init);
-bot.dialog('/presente_um', cenarioTres.presente);
-bot.dialog('/presente_dois', cenarioTres.presente_dois);
-bot.dialog('/presente_tres', cenarioTres.presente_tres);
-bot.dialog('/presente_quatro', cenarioTres.presente_quatro);
+intents.matches('ABANDONO', cenarioUm.init);
+bot.dialog('/promocao_um', cenarioUm.promocao);
+bot.dialog('/promocao_dois', cenarioUm.promocao_um);
+bot.dialog('/promocao_tres', cenarioUm.promocao_dois);
+bot.dialog('/promocao_quatro', cenarioUm.promocao_tres);
 
 intents.matches('WELCOME', cenarioQuatro.init);
 intents.matches('PROMOCAO', cenarioQuatro.selecionarCategoria);
@@ -70,6 +63,8 @@ intents.matches('PRESENTE', cenarioQuatro.produto);
 intents.matches('PERFUME', cenarioQuatro.produto);
 intents.matches('HIDRATANTE', cenarioQuatro.produto);
 intents.matches('SHAMPOO', cenarioQuatro.produto);
+
+intents.matches('VENDIDO', cenarioQuatro.vendido);
 
 intents.matches('OBRIGADO', cenarioQuatro.obrigado);
 ///
