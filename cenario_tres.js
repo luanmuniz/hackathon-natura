@@ -6,42 +6,40 @@ module.exports = {
 	init(s) {
 		s.send('Oi Maria, tudo bom? Vi que você tem 12 pontos e faltam 38 para você completar o seu pedido! Posso te mostrar promoções, lançamentos e presentes? Escolha uma opção.')
 
-	    helper.sendSlider(s, [
-	        {
-	            "title": "Promoções",
-	            "subtitle": "Promoções",
-	            "images": [
-	                { "url": "https://dummyimage.com/600x300" }
-	            ],
-	            "buttons": [{
-	                "type": "postBack",
-	                "title": "Ver presentes",
-	                "value": "11111111111111111111"
-	            }]
-	        }, {
-	            "title": "Presentes",
-	            "subtitle": "Presentes",
-	            "images": [
-	                { "url": "https://dummyimage.com/600x300" }
-	            ],
-	            "buttons": [{
-	                "type": "postBack",
-	                "title": "Ver presentes",
-	                "value": "66666666666666666666"
-	            }]
-	        }, {
-	            "title": "Lançamento",
-	            "subtitle": "Lançamento",
-	            "images": [
-	                { "url": "https://dummyimage.com/600x300" }
-	            ],
-	            "buttons": [{
-	                "type": "postBack",
-	                "title": "Ver lançamento",
-	                "value": ""
-	            }]
-	        }
-	    ]);
+		helper.sendSlider(s, [{
+			"title": "Promoções",
+			"subtitle": "Promoções",
+			"images": [{
+				"url": "https://dummyimage.com/600x300"
+			}],
+			"buttons": [{
+				"type": "postBack",
+				"title": "Ver presentes",
+				"value": "11111111111111111111"
+			}]
+		}, {
+			"title": "Presentes",
+			"subtitle": "Presentes",
+			"images": [{
+				"url": "https://dummyimage.com/600x300"
+			}],
+			"buttons": [{
+				"type": "postBack",
+				"title": "Ver presentes",
+				"value": "66666666666666666666"
+			}]
+		}, {
+			"title": "Lançamento",
+			"subtitle": "Lançamento",
+			"images": [{
+				"url": "https://dummyimage.com/600x300"
+			}],
+			"buttons": [{
+				"type": "postBack",
+				"title": "Ver lançamento",
+				"value": ""
+			}]
+		}]);
 	},
 
 	presente(s) {
@@ -58,14 +56,16 @@ module.exports = {
 
 			result.forEach((thisPresente) => {
 				arrayToSend.push({
-		            title: thisPresente.name,
-		            images: [ { url: thisPresente.img } ],
-		            buttons: [{
-		                type: "postBack",
-		                title: "Ver lançamento",
-		                value: "77777777777777777777"
-		            }]
-		        });
+					title: thisPresente.name,
+					images: [{
+						url: thisPresente.img
+					}],
+					buttons: [{
+						type: "postBack",
+						title: "Ver lançamento",
+						value: "77777777777777777777"
+					}]
+				});
 			});
 
 			helper.sendSlider(s, arrayToSend);

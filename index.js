@@ -27,7 +27,7 @@ var connector = new builder.ChatConnector({
 var bot = new builder.UniversalBot(connector);
 var recognizer = new builder.LuisRecognizer('https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/76fbffec-6677-4f37-a09f-c52cc160c047?subscription-key=94c91f8f3a0d46d6bb516227bd208728&verbose=true&timezoneOffset=0.0');
 var intents = new builder.IntentDialog({
-    recognizers: [ recognizer ],
+    recognizers: [recognizer],
     intentThreshold: 0.7
 });
 server.post('/api/messages', connector.listen());
@@ -37,15 +37,18 @@ server.post('/api/messages', connector.listen());
 //=========================================================
 
 bot.dialog('/', (s) => {
-	if(s.message.text.includes('INTENT_')) {
-		let intentName = s.message.text.replace('INTENT_', '').toLowerCase();
-		return s.replaceDialog(`/${intentName}`);
-	}
+    console.log(s);
+    if (s.message.text.includes('INTENT_')) {
+        let intentName = s.message.text.replace('INTENT_', '').toLowerCase();
+        return s.replaceDialog(`/${intentName}`);
+    }
 
-	s.replaceDialog(`/intents`);
+    s.replaceDialog(`/intents`);
 });
 
 bot.dialog('/intents', intents);
+
+global.actualIntent = '';
 
 // intents.matches('WELCOME', cenarioUm.init);
 // intents.matches('00000000000000000000', cenarioUm.init);
@@ -61,14 +64,17 @@ bot.dialog('/presente_tres', cenarioTres.presente_tres);
 bot.dialog('/presente_quatro', cenarioTres.presente_quatro);
 
 intents.matches('WELCOME', cenarioQuatro.init);
-intents.matches('PROMOCAO', cenarioQuatro.promocao);
-bot.dialog('/promocao_add', cenarioQuatro.promocao_add);
-intents.matches('LANCAMENTO', cenarioQuatro.lancamento);
-intents.matches('PRESENTE', cenarioQuatro.presente);
-intents.matches('MODELO', cenarioQuatro.modelo);
-bot.dialog('/modelo_5', cenarioQuatro.modelo_cinco);
+intents.matches('PROMOCAO', cenarioQuatro.selecionarCategoria);
+intents.matches('PRESENTE', cenarioQuatro.selecionarCategoria);
+intents.matches('LANCAMENTO', cenarioQuatro.selecionarCategoria);
+
+intents.matches('PERFUME', cenarioQuatro.produto);
+intents.matches('HIDRATANTE', cenarioQuatro.produto);
+intents.matches('SHAMPOO', cenarioQuatro.produto);
+
 intents.matches('OBRIGADO', cenarioQuatro.obrigado);
-intents.matches('PEDIDO', cenarioQuatro.pedido);
+
+bot.dialog('/categoria_add', cenarioQuatro.categoria_add);
 
 intents.onDefault((session, args) => {
     session.send('Desculpe nao entendi');

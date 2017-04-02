@@ -8,12 +8,57 @@ module.exports = {
 		s.send('Oi Maria, em que posso ajuda-la?');
 	},
 
-	async promocao(s) {
-		s.send('Maria, analisamos o seu perfil e identificamos que essas promoções se encaixam com você. Essas promoções podem aumentar as suas vendas!');
+	async selecionarCategoria(s) {
+		actualIntent = s.dialogData['BotBuilder.Data.Intent'];
+		s.send(`Tudo bem, entendi que você quer falar sobre ${actualIntent}. Agora, me fala sobre qual tipo de produto você quer.`)
 
+		s.endDialog();
+	},
+
+	async produto(s) {
+		let texto = '';
+		let objToQuery = {
+			metadata: {}
+		};
+
+		let intentSubstative = '';
+		switch (s.dialogData['BotBuilder.Data.Intent']) {
+			case 'PERFUME':
+				objToQuery.metadata.substantive = 'Perfume Natura';
+				break;
+			case 'HIDRATANTE':
+				objToQuery.metadata.substantive = 'Hidratante Natura';
+				break;
+			case 'SHAMPOO':
+				objToQuery.metadata.substantive = 'Shampoo Natura';
+				break;
+		}
+
+		if (actualIntent === 'PROMOCAO') {
+			objToQuery.metadata.natura = 'Promoção';
+			texto = 'Maria, analisamos o seu perfil e identificamos que essas promoções se encaixam com você. Essas promoções podem aumentar as suas vendas!';
+		}
+
+		if (actualIntent === 'LANCAMENTO') {
+			objToQuery.metadata.natura = 'Lançamento';
+			texto = 'Os lançamentos do ciclo atual são esses abaixo';
+		}
+
+		if (actualIntent === 'PRESENTE') {
+			objToQuery.metadata.substantive = 'Presente Natura';
+			texto = 'Claro, abaixo estão alguns presentes que combinam com seu histórico de pedidos e que provavelmente irão agregar ao seu cliente.';
+		}
+
+		let stringToQuery = encodeURI(JSON.stringify(objToQuery)).replace(/\:/mg, '%3A').replace(/\,/mg, '%2C');
+
+		console.log(objToQuery, stringToQuery)
+
+		s.send(texto);
 		s.sendTyping();
-		let apiResult = await got('http://40.71.226.49/rec/sortOffers?store=natura&field=price&q=%7B%22metadata%22%3A%7B%22natura%22%3A%22Promo%C3%A7%C3%A3o%22%7D%7D', {
-			headers: { 'Authorization': 'adcfdecda123491231afddaee' }
+		let apiResult = await got(`http://40.71.226.49/rec/sortOffers?store=natura&field=price&q=${stringToQuery}`, {
+			headers: {
+				'Authorization': 'adcfdecda123491231afddaee'
+			}
 		});
 
 		let arrayToSend = [];
@@ -23,122 +68,31 @@ module.exports = {
 			subtitle = `De: R$ ${thisPresente.list_price.toFixed(2)} Por: R$ ${precoPromocao}`;
 
 			arrayToSend.push({
-	            title: `${thisPresente.name} (${prontos} pontos)`,
-	            subtitle: subtitle,
-	            images: [ { url: thisPresente.img } ],
-	            buttons: [{
-	                type: "postBack",
-	                title: "Adicionar ao pedido",
-	                value: "INTENT_PROMOCAO_ADD"
-	            }]
-	        });
+				title: `${thisPresente.name} (${prontos} pontos)`,
+				subtitle: subtitle,
+				images: [{
+					url: thisPresente.img
+				}],
+				buttons: [{
+					type: "postBack",
+					title: "Adicionar ao pedido",
+					value: "INTENT_CATEGORIA_ADD"
+				}]
+			});
 		});
 
 		helper.sendSlider(s, arrayToSend);
 		s.endDialog();
 	},
 
-	promocao_add(s) {
-		s.send('Já adicionei a promoção ao seu pedido. Posso ajudar em mais alguma coisa?');
+	categoria_add(s) {
+		s.send(`Já adicionei a ${actualIntent} ao seu pedido. Posso ajudar em mais alguma coisa?`);
 		s.endDialog();
-	},
-
-	async lancamento(s) {
-		s.send('Os lançamentos do ciclo atual sao esses abaixos');
-
-		s.sendTyping();
-		let apiResult = await got('http://40.71.226.49/rec/sortOffers?store=natura&field=price&q=%7B%22metadata%22%3A%7B%22natura%22%3A%22Lan%C3%A7amento%22%7D%7D', {
-			headers: { 'Authorization': 'adcfdecda123491231afddaee' }
-		});
-
-		let arrayToSend = [];
-		JSON.parse(apiResult.body).forEach((thisPresente) => {
-			let precoPromocao = (thisPresente.price * 0.7).toFixed(2);
-			let prontos = Math.ceil(thisPresente.price / 4.2).toFixed(0);
-			subtitle = `De: R$ ${thisPresente.list_price.toFixed(2)} Por: R$ ${precoPromocao}`;
-
-			arrayToSend.push({
-	            title: `${thisPresente.name} (${prontos} pontos)`,
-	            subtitle: subtitle,
-	            images: [ { url: thisPresente.img } ],
-	            buttons: [{
-	                type: "postBack",
-	                title: "Adicionar ao pedido",
-	                value: "INTENT_PROMOCAO_ADD"
-	            }]
-	        });
-		});
-
-		helper.sendSlider(s, arrayToSend);
-		s.endDialog();
-	},
-
-	presente(s) {
-		s.send('Claro, abaixo alguns presentes que combinam com seu histórico de pedidos e que provavelmente irá agregar ao seu cliente.');
-
-		helper.sendSlider(s, [{
-			"title": "PRESENTE 1",
-			"subtitle": "Você paga R$ 450 em 2x no boleto e pode Vender por até R$ 585!",
-			"images": [
-				{ "url": "https://dummyimage.com/600x300" }
-			],
-			"buttons": [{
-				"type": "openUrl",
-				"title": "Veja mais sobre essa promoção",
-				"value": "http://natura.com.br"
-			}]
-		}, {
-			"title": "PRESENTE 2",
-			"subtitle": "Você paga R$ 450 em 2x no boleto e pode Vender por até R$ 585!",
-			"images": [
-				{ "url": "https://dummyimage.com/600x300" }
-			],
-			"buttons": [{
-				"type": "openUrl",
-				"title": "Veja mais sobre essa promoção",
-				"value": "http://natura.com.br"
-			}]
-		}]);
-	},
-
-	modelo(s) {
-		s.send('Sim. Você gostaria de um modelo de 50 pontos ou 80 pontos?');
-	},
-
-	modelo_cinco(s) {
-		s.send('Segue os produtos que pensamos atende aos seus clientes para elaborar a lista.')
-
-		helper.sendSlider(s, [{
-			"title": "MODELO 1",
-			"subtitle": "Você paga R$ 450 em 2x no boleto e pode Vender por até R$ 585!",
-			"images": [
-				{ "url": "https://dummyimage.com/600x300" }
-			],
-			"buttons": [{
-				"type": "openUrl",
-				"title": "Veja mais sobre essa promoção",
-				"value": "http://natura.com.br"
-			}]
-		}, {
-			"title": "MODELO 2",
-			"subtitle": "Você paga R$ 450 em 2x no boleto e pode Vender por até R$ 585!",
-			"images": [
-				{ "url": "https://dummyimage.com/600x300" }
-			],
-			"buttons": [{
-				"type": "openUrl",
-				"title": "Veja mais sobre essa promoção",
-				"value": "http://natura.com.br"
-			}]
-		}]);
 	},
 
 	obrigado(s) {
-		s.send('Por nada')
-	},
-
-	pedido(s) {
-		s.send('Ótimo!!! Sempre que quiser, estarei aqui para te ajudar! Boas Vendas');
+		s.send('Ótimo!! Sempre que quiser, estarei aqui para te ajudar! Boas vendas!');
+		actualIntent = '';
 		s.endDialog();
 	}
 
