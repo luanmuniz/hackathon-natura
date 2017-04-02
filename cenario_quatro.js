@@ -24,9 +24,6 @@ module.exports = {
 		if (actualIntent === 'PRESENTE') {
 			s.produto()
 		}
-
-
-		s.endDialog();
 	},
 
 	async produto(s) {
