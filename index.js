@@ -39,20 +39,20 @@ server.post('/api/messages', connector.listen());
 bot.dialog('/', (s) => {
 	if(s.message.text.includes('INTENT_')) {
 		let intentName = s.message.text.replace('INTENT_', '').toLowerCase();
-		return s.beginDialog(`/${intentName}`);
+		return s.replaceDialog(`/${intentName}`);
 	}
 
-	s.beginDialog(`/intents`);
+	s.replaceDialog(`/intents`);
 });
 
 bot.dialog('/intents', intents);
 
-intents.matches('WELCOME', cenarioUm.init);
-//intents.matches('00000000000000000000', cenarioUm.init);
-bot.dialog('/promocao_um', cenarioUm.promocao);
-bot.dialog('/promocao_dois', cenarioUm.promocao_um);
-bot.dialog('/promocao_tres', cenarioUm.promocao_dois);
-bot.dialog('/promocao_quatro', cenarioUm.promocao_tres);
+// intents.matches('WELCOME', cenarioUm.init);
+// intents.matches('00000000000000000000', cenarioUm.init);
+// bot.dialog('/promocao_um', cenarioUm.promocao);
+// bot.dialog('/promocao_dois', cenarioUm.promocao_um);
+// bot.dialog('/promocao_tres', cenarioUm.promocao_dois);
+// bot.dialog('/promocao_quatro', cenarioUm.promocao_tres);
 
 intents.matches('11111111111111111111', cenarioTres.init);
 bot.dialog('/presente_um', cenarioTres.presente);
@@ -60,8 +60,9 @@ bot.dialog('/presente_dois', cenarioTres.presente_dois);
 bot.dialog('/presente_tres', cenarioTres.presente_tres);
 bot.dialog('/presente_quatro', cenarioTres.presente_quatro);
 
-// intents.matches('WELCOME', cenarioQuatro.init);
+intents.matches('WELCOME', cenarioQuatro.init);
 intents.matches('PROMOCAO', cenarioQuatro.promocao);
+bot.dialog('/promocao_add', cenarioQuatro.promocao_add);
 intents.matches('LANCAMENTO', cenarioQuatro.lancamento);
 intents.matches('PRESENTE', cenarioQuatro.presente);
 intents.matches('MODELO', cenarioQuatro.modelo);
