@@ -6,7 +6,6 @@ module.exports = {
 
 	init(s) {
 		s.send('Oi Hivio, em que posso ajudá-lo?');
-		s.send('Vi que você tem 39 pontos e faltam apenas 11 para você completar o seu pedido! Se quiser, posso te mostrar promoções, lançamentos e presentes que combinam com você e suas clientes.');
 		s.endDialog();
 	},
 
