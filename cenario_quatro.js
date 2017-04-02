@@ -6,6 +6,7 @@ module.exports = {
 
 	init(s) {
 		s.send('Oi Hivio, em que posso ajudá-lo?');
+		s.send('Posso te mostrar promoções, lançamentos e presentes que combinam com você e suas clientes. Me diga o que você prefere');
 		s.endDialog();
 	},
 
