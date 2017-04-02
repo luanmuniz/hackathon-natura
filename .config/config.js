@@ -1,0 +1,3 @@
+production:{
+	root: roothPath
+}
