@@ -1,5 +1,6 @@
 const builder = require('botbuilder');
 const helper = require('./helper');
+const got = require('got');
 
 module.exports = {
 
@@ -16,7 +17,7 @@ module.exports = {
 	            "buttons": [{
 	                "type": "postBack",
 	                "title": "Ver presentes",
-	                "value": "11111111111111111111"
+	                "value": "INTENT_PROMOCAO_UM"
 	            }]
 	        }, {
 	            "title": "Presentes",
@@ -42,34 +43,38 @@ module.exports = {
 	            }]
 	        }
 	    ]);
+
+	    s.endDialog();
 	},
 
-	promocao(s) {
+	async promocao(s) {
 		s.send('Legal! Você escolheu promoções! Aqui estão duas indicações que escolhemos especialmente para te ajudar a você passar o pedido de 50 pontos ou mais!');
 
-		helper.sendSlider(s, [{
-			"title": "Mais 12 pontos",
-			"subtitle": "Você paga R$ 450 em 2x no boleto e pode Vender por até R$ 585!",
-			"images": [
-				{ "url": "https://dummyimage.com/600x300" }
-			],
-			"buttons": [{
-				"type": "postBack",
-				"title": "Ver promoções",
-				"value": "22222222222222222222"
-			}]
-		}, {
-			"title": "Mais 15 pontos",
-			"subtitle": "Você paga R$ 450 em 2x no boleto e pode Vender por até R$ 585!",
-			"images": [
-				{ "url": "https://dummyimage.com/600x300" }
-			],
-			"buttons": [{
-				"type": "postBack",
-				"title": "Ver promoções",
-				"value": "22222222222222222222"
-			}]
-		}]);
+		s.sendTyping();
+		let apiResult = await got('http://40.71.226.49/rec/sortOffers?store=natura&field=price&q=%7B%22metadata%22%3A%7B%22natura%22%3A%22Promo%C3%A7%C3%A3o%22%7D%7D', {
+			headers: { 'Authorization': 'adcfdecda123491231afddaee' }
+		});
+
+		let arrayToSend = [];
+
+		JSON.parse(apiResult.body).forEach((thisPresente) => {
+			arrayToSend.push({
+	            title: thisPresente.name,
+	            images: [ { url: thisPresente.img } ],
+	            buttons: [{
+	                type: "postBack",
+	                title: "Ver Promoção",
+	                value: "INTENT_PROMOCAO_DOIS"
+	            }, {
+	                type: "postBack",
+	                title: "Adicionar ao carrinho",
+	                value: "INTENT_PROMOCAO_DOIS"
+	            }]
+	        });
+		});
+
+		helper.sendSlider(s, arrayToSend);
+		s.endDialog();
 	},
 
 	promocao_um(s) {
@@ -84,7 +89,7 @@ module.exports = {
 			"buttons": [{
 				"type": "postBack",
 				"title": "Ver promoções",
-				"value": "33333333333333333333"
+				"value": "INTENT_PROMOCAO_TRES"
 			}]
 		}, {
 			"title": "Mais 50 pontos",
@@ -95,9 +100,10 @@ module.exports = {
 			"buttons": [{
 				"type": "postBack",
 				"title": "Ver promoções",
-				"value": "33333333333333333333"
+				"value": "INTENT_PROMOCAO_TRES"
 			}]
 		}]);
+		s.endDialog();
 	},
 
 	promocao_dois(s) {
@@ -112,7 +118,7 @@ module.exports = {
 			"buttons": [{
 				"type": "postBack",
 				"title": "Ver promoções",
-				"value": "44444444444444444444"
+				"value": "INTENT_PROMOCAO_QUATRO"
 			}]
 		}, {
 			"title": "Mais 50 pontos",
@@ -123,13 +129,15 @@ module.exports = {
 			"buttons": [{
 				"type": "postBack",
 				"title": "Ver promoções",
-				"value": "44444444444444444444"
+				"value": "INTENT_PROMOCAO_QUATRO"
 			}]
 		}]);
+		s.endDialog();
 	},
 
 	promocao_tres: (s) => {
 		s.send('Ótima escolha! Agora você pode vender por até R$ 893.');
+		s.endDialog();
 	}
 
 }
