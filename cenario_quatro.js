@@ -20,10 +20,6 @@ module.exports = {
 			s.send(`Tudo bem, entendi que você quer falar sobre lançamentos. Agora, me fala sobre qual tipo de produto você quer.`)
 			s.endDialog();
 		}
-
-		if (actualIntent === 'PRESENTE') {
-			s.produto()
-		}
 	},
 
 	async produto(s) {
@@ -32,10 +28,15 @@ module.exports = {
 			metadata: {}
 		};
 
+		if(!actualIntent) {
+			actualIntent = 'PRESENTE';
+		}
+
 		let intentSubstative = '';
 		switch (s.dialogData['BotBuilder.Data.Intent']) {
 			case 'PERFUME':
 				objToQuery.metadata.substantive = 'Perfume Natura';
+				objToQuery.metadata.type = { or: ["Deo Colônia", "Deo Parfum"]};
 				break;
 			case 'HIDRATANTE':
 				objToQuery.metadata.substantive = 'Hidratante Natura';
@@ -57,7 +58,7 @@ module.exports = {
 
 		if (actualIntent === 'PRESENTE') {
 			objToQuery.metadata.substantive = 'Presente Natura';
-			texto = 'Claro, abaixo estão alguns presentes que combinam com seus últimos pedidos e que provavelmente irão agregar ao seu cliente.';
+			texto = 'Muito bem, abaixo estão alguns presentes que combinam com seus últimos pedidos e que provavelmente irão agregar ao seu cliente.';
 		}
 
 		let stringToQuery = encodeURI(JSON.stringify(objToQuery)).replace(/\:/mg, '%3A').replace(/\,/mg, '%2C');
@@ -88,7 +89,7 @@ module.exports = {
 				}],
 				buttons: [{
 					type: "postBack",
-					title: "Adicionar ao pedido",
+					title: `Adicionar #${thisPresente.id} ao pedido`,
 					value: "INTENT_CATEGORIA_ADD"
 				}]
 			});

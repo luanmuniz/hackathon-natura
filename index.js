@@ -37,7 +37,6 @@ server.post('/api/messages', connector.listen());
 //=========================================================
 
 bot.dialog('/', (s) => {
-    console.log(s);
     if (s.message.text.includes('INTENT_')) {
         let intentName = s.message.text.replace('INTENT_', '').toLowerCase();
         return s.replaceDialog(`/${intentName}`);
@@ -65,9 +64,8 @@ bot.dialog('/presente_quatro', cenarioTres.presente_quatro);
 
 intents.matches('WELCOME', cenarioQuatro.init);
 intents.matches('PROMOCAO', cenarioQuatro.selecionarCategoria);
-///
-intents.matches('PRESENTE', cenarioQuatro.selecionarCategoria);
 intents.matches('LANCAMENTO', cenarioQuatro.selecionarCategoria);
+intents.matches('PRESENTE', cenarioQuatro.produto);
 
 intents.matches('PERFUME', cenarioQuatro.produto);
 intents.matches('HIDRATANTE', cenarioQuatro.produto);
