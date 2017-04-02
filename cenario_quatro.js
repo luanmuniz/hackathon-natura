@@ -5,7 +5,9 @@ const got = require('got');
 module.exports = {
 
 	init(s) {
-		s.send('Oi Hivio, em que posso ajudá-lo?\nPosso te mostrar promoções, lançamentos e presentes que combinam com você e suas clientes. Me diga o que você prefere');
+		s.send('Oi Hivio, em que posso ajudá-lo?');
+		s.send('Vi que você tem 39 pontos e faltam apenas 11 para você completar o seu pedido! Se quiser, posso te mostrar promoções, lançamentos e presentes que combinam com você e suas clientes.');
+		s.endDialog();
 	},
 
 	async selecionarCategoria(s) {
@@ -105,13 +107,15 @@ module.exports = {
 	},
 
 	async vendido(s) {
-		s.send(`Sim, esse é nosso produto mais popular!`);
+		s.send(`Esses são os produtos mais vendidos que mais combinam com você!`);
 		let objToQuery = {
 			metadata: {
 				substantive: 'Perfume Natura',
 				type : { or: ["Deo Colônia", "Deo Parfum"]}
 			}
 		};
+
+		actualIntent = 'oferta';
 
 		s.sendTyping();
 		let stringToQuery = encodeURI(JSON.stringify(objToQuery)).replace(/\:/mg, '%3A').replace(/\,/mg, '%2C');
@@ -122,27 +126,23 @@ module.exports = {
 		});
 
 		let arrayToSend = [];
-		let product = JSON.parse(apiResult.body);
-		let thisPresente = product[0];
-		let precoPromocao = (thisPresente.price * 0.7).toFixed(2);
-		let prontos = Math.ceil(thisPresente.price / 4.2).toFixed(0);
-		subtitle = `De: R$ ${thisPresente.list_price.toFixed(2)} Por: R$ ${precoPromocao}`;
+		JSON.parse(apiResult.body).forEach((thisPresente) => {
+			let precoPromocao = (thisPresente.price * 0.7).toFixed(2);
+			let prontos = Math.ceil(thisPresente.price / 4.2).toFixed(0);
+			subtitle = `De: R$ ${thisPresente.list_price.toFixed(2)} Por: R$ ${precoPromocao}`;
 
-		if (actualIntent === 'PRESENTE') {
-			subtitle = '';
-		}
-
-		arrayToSend.push({
-			title: `${thisPresente.name} (${prontos} pontos)`,
-			subtitle: subtitle,
-			images: [{
-				url: thisPresente.img
-			}],
-			buttons: [{
-				type: "postBack",
-				title: `Adicionar #${thisPresente.id} ao pedido`,
-				value: "INTENT_CATEGORIA_ADD"
-			}]
+			arrayToSend.push({
+				title: `${thisPresente.name} (${prontos} pontos)`,
+				subtitle: subtitle,
+				images: [{
+					url: thisPresente.img
+				}],
+				buttons: [{
+					type: "postBack",
+					title: `Adicionar #${thisPresente.id} ao pedido`,
+					value: "INTENT_CATEGORIA_ADD"
+				}]
+			});
 		});
 
 		helper.sendSlider(s, arrayToSend);
