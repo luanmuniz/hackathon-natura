@@ -102,7 +102,7 @@ module.exports = {
 	},
 
 	categoria_add(s) {
-		s.send(`Já adicionei a ${actualIntent} ao seu pedido. Posso ajudar em mais alguma coisa?`);
+		s.send(`Já adicionei o produto ao seu pedido. Posso ajudar em mais alguma coisa?`);
 		s.endDialog();
 	},
 
