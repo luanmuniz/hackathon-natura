@@ -76,21 +76,9 @@ module.exports = {
 					url: thisPresente.img
 				}],
 				buttons: [{
-					type: "openUrl",
+					type: "postBack",
 					title: "Adicionar ao pedido",
-					value: "http://google.com"
-				},{
-					type: "openUrl",
-					title: "Adicionar ao pedido 2",
-					value: "https://pedidos2.natura.net/captaweb/captaweb/index.html#!view=pedido&code=22560"
-				},{
-					type: "openUrl",
-					title: "Adicionar ao pedido 3",
-					value: "#!view=pedido&code=22560"
-				},{
-					type: "openUrl",
-					title: "Adicionar ao pedido 4",
-					value: "/captaweb/captaweb/index.html#!view=pedido&code=22560"
+					value: "INTENT_CATEGORIA_ADD"
 				}]
 			});
 		});
