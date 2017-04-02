@@ -65,6 +65,7 @@ bot.dialog('/presente_quatro', cenarioTres.presente_quatro);
 
 intents.matches('WELCOME', cenarioQuatro.init);
 intents.matches('PROMOCAO', cenarioQuatro.selecionarCategoria);
+///
 intents.matches('PRESENTE', cenarioQuatro.selecionarCategoria);
 intents.matches('LANCAMENTO', cenarioQuatro.selecionarCategoria);
 
@@ -73,7 +74,7 @@ intents.matches('HIDRATANTE', cenarioQuatro.produto);
 intents.matches('SHAMPOO', cenarioQuatro.produto);
 
 intents.matches('OBRIGADO', cenarioQuatro.obrigado);
-
+///
 bot.dialog('/categoria_add', cenarioQuatro.categoria_add);
 
 intents.onDefault((session, args) => {

@@ -5,12 +5,26 @@ const got = require('got');
 module.exports = {
 
 	init(s) {
-		s.send('Oi Maria, em que posso ajuda-la?');
+		s.send('Oi Hivio, em que posso ajudá-lo?\nPosso te mostrar promoções, lançamentos e presentes que combinam com você e suas clientes. Me diga o que você prefere');
 	},
 
 	async selecionarCategoria(s) {
 		actualIntent = s.dialogData['BotBuilder.Data.Intent'];
-		s.send(`Tudo bem, entendi que você quer falar sobre ${actualIntent}. Agora, me fala sobre qual tipo de produto você quer.`)
+
+		if (actualIntent === 'PROMOCAO') {
+			s.send(`Tudo bem, entendi que você quer falar sobre promoções. Agora, me fala sobre qual tipo de produto você quer.`)
+			s.endDialog();
+		}
+
+		if (actualIntent === 'LANCAMENTO') {
+			s.send(`Tudo bem, entendi que você quer falar sobre lançamentos. Agora, me fala sobre qual tipo de produto você quer.`)
+			s.endDialog();
+		}
+
+		if (actualIntent === 'PRESENTE') {
+			s.produto()
+		}
+
 
 		s.endDialog();
 	},
@@ -36,7 +50,7 @@ module.exports = {
 
 		if (actualIntent === 'PROMOCAO') {
 			objToQuery.metadata.natura = 'Promoção';
-			texto = 'Maria, analisamos o seu perfil e identificamos que essas promoções se encaixam com você. Essas promoções podem aumentar as suas vendas!';
+			texto = 'Hivio, analisamos seus pedidos anteriores e identificamos esses produtos podem aumentar as suas vendas!';
 		}
 
 		if (actualIntent === 'LANCAMENTO') {
@@ -46,7 +60,7 @@ module.exports = {
 
 		if (actualIntent === 'PRESENTE') {
 			objToQuery.metadata.substantive = 'Presente Natura';
-			texto = 'Claro, abaixo estão alguns presentes que combinam com seu histórico de pedidos e que provavelmente irão agregar ao seu cliente.';
+			texto = 'Claro, abaixo estão alguns presentes que combinam com seus últimos pedidos e que provavelmente irão agregar ao seu cliente.';
 		}
 
 		let stringToQuery = encodeURI(JSON.stringify(objToQuery)).replace(/\:/mg, '%3A').replace(/\,/mg, '%2C');
